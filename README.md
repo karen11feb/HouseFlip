@@ -75,3 +75,21 @@ Preço muito bom (19 pts)
 15% de potencial de valorização (3.75 pts)
 Condomínio R$200 + utilidades R$100 = R$300/mês (19 pts)
 Padrão Semiluxo + muita infraestrutura (8 pts)
+
+
+
+Release 1.1 - O que foi corrigido:
+1. Botão de Buscar Explícito
+
+Adicionei um grande botão "🔍 Buscar Apartamentos" no final dos filtros
+Agora você não precisa alterar filtros para disparar a busca - clique no botão quando estiver pronto
+
+2. Filtro de Região/Bairro
+
+Seção dedicada no topo dos filtros (antes de Preço)
+Checkboxes dos bairros cadastrados aparecem automaticamente
+3 opções:
+
+Selecionar um ou mais bairros específicos (aparece apenas esses)
+Deixar em branco (mostra todos os apartamentos)
+"Selecionar Todos" e "Desselecionar Todos" para facilitar
