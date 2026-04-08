@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Apartamentos - Versão Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f4c75;
+            --primary-light: #3282b8;
+            --accent: #fb6e4e;
+            --accent-light: #fca5a5;
+            --success: #2dac4e;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --neutral-dark: #2c3e50;
+            --neutral-light: #ecf0f1;
+            --neutral-lighter: #f8f9fa;
+            --border: #bdc3c7;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --bg-card: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(15, 76, 117, 0.15);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--neutral-light);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: var(--neutral-lighter);
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background: var(--neutral-lighter);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--neutral-light);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 76, 117, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .form-row-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 0.75rem;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(15, 76, 117, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--neutral-light);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-compare {
+            background: var(--primary-light);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-compare:hover {
+            background: var(--primary);
+        }
+
+        .filters-container {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filters-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--neutral-light);
+        }
+
+        .filters-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .filters-section h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .filter-group input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .range-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .filter-value {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .apartments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .apartments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .apartment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--neutral-light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .apartment-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .apartment-card.selected {
+            border-left-color: var(--accent);
+            background: var(--neutral-lighter);
+        }
+
+        .score-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .score-excellent {
+            background: linear-gradient(135deg, #2dac4e 0%, #27a43a 100%);
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, #3282b8 0%, #1e5a8e 100%);
+        }
+
+        .score-fair {
+            background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+        }
+
+        .score-poor {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .score-breakdown {
+            background: var(--neutral-lighter);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+
+        .score-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .card-stats {
+            background: var(--neutral-lighter);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .liquidity-badge {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .liquidity-high {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .liquidity-medium {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .liquidity-low {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .infrastructure-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--neutral-light);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .infrastructure-list strong {
+            color: var(--text-primary);
+        }
+
+        .cost-estimate {
+            background: var(--neutral-lighter);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .cost-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .cost-label {
+            color: var(--text-secondary);
+        }
+
+        .cost-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--neutral-light);
+            border-top: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .analysis-section {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .analysis-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .analysis-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--neutral-light);
+        }
+
+        .analysis-row:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .analysis-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .notes {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--neutral-light);
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .results-info {
+            background: var(--primary-light);
+            color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .results-info span {
+            font-weight: 700;
+        }
+
+        .veto-warning {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--danger);
+        }
+
+        .veto-warning strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-light);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--neutral-lighter);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--neutral-light);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .card-actions button {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        input[type="checkbox"].veto-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Buscador Premium de Apartamentos</h1>
+            <p>Análise completa com Score de Investimento, Vetos e Filtros Avançados</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('add')">Adicionar</button>
+            <button class="tab-btn" onclick="switchTab('vetos')">Vetos</button>
+            <button class="tab-btn" onclick="switchTab('search')">Buscar</button>
+            <button class="tab-btn" onclick="switchTab('compare')">Comparar</button>
+            <button class="tab-btn" onclick="switchTab('analysis')">Análise</button>
+        </div>
+
+        <!-- ABA ADICIONAR -->
+        <div id="add" class="tab-content active">
+            <div class="form-container">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Novo Apartamento</h2>
+                
+                <div class="form-group">
+                    <label>Endereço/Rua</label>
+                    <input type="text" id="address" placeholder="Ex: Rua das Flores, 123 - Apt 456">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preço Total (R$)</label>
+                        <input type="number" id="price" placeholder="250000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Área Total (m²)</label>
+                        <input type="number" id="area" placeholder="80" min="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Área Útil (m²) <span style="font-size: 0.85rem; color: var(--text-secondary);">(opcional)</span></label>
+                        <input type="number" id="usefulArea" placeholder="70" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Padrão do Imóvel</label>
+                        <select id="standard">
+                            <option value="">Selecione...</option>
+                            <option>Básico</option>
+                            <option>Popular</option>
+                            <option>Intermediário</option>
+                            <option>Padrão</option>
+                            <option>Semiluxo</option>
+                            <option>Luxo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Andar</label>
+                        <input type="number" id="floor" placeholder="5" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Condomínio</label>
+                        <select id="condominiumType">
+                            <option value="">Selecione...</option>
+                            <option>Fechado</option>
+                            <option>Aberto</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Vagas de Garagem</label>
+                        <input type="number" id="parking" placeholder="1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Quartos</label>
+                        <input type="number" id="bedrooms" placeholder="3" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Banheiros</label>
+                        <input type="number" id="bathrooms" placeholder="2" min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vista</label>
+                        <select id="view">
+                            <option value="">Selecione...</option>
+                            <option>Nenhuma</option>
+                            <option>Rua</option>
+                            <option>Praia</option>
+                            <option>Montanha</option>
+                            <option>Parque</option>
+                            <option>Cidade</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tempo de Venda (meses)</label>
+                        <input type="number" id="liquidityMonths" placeholder="6" min="1" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Potencial de Valorização (%)</label>
+                        <input type="number" id="appreciationPotential" placeholder="5" min="0" max="100" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Preço do Condomínio (R$/mês)</label>
+                        <input type="number" id="condoFee" placeholder="500" min="0" step="10">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Custos Básicos (luz, água, gás - R$/mês)</label>
+                        <input type="number" id="basicUtilities" placeholder="150" min="0" step="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Microregião/Bairro</label>
+                        <input type="text" id="neighborhood" placeholder="Ex: Vila Mariana, Centro">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Edifício/Condomínio</label>
+                    <input type="text" id="building" placeholder="Ex: Edifício Tulipa (opcional)">
+                </div>
+
+                <div class="form-group">
+                    <label>Infraestrutura</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pool">
+                            <label for="pool">Piscina</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gym">
+                            <label for="gym">Academia</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="security24h">
+                            <label for="security24h">Segurança 24h</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="concierge24h">
+                            <label for="concierge24h">Portaria 24h</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="playground">
+                            <label for="playground">Playground</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="garden">
+                            <label for="garden">Jardim</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="elevator">
+                            <label for="elevator">Elevador</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="bbq">
+                            <label for="bbq">Churrasqueira</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="notes" placeholder="Informações adicionais..." style="resize: vertical; min-height: 100px;"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="addApartment()">Adicionar Apartamento</button>
+            </div>
+        </div>
+
+        <!-- ABA VETOS -->
+        <div id="vetos" class="tab-content">
+            <div class="form-container">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Criar Lista de Vetos</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">Apartamentos com essas características serão automaticamente excluídos dos resultados</p>
+
+                <div id="vetosList" style="margin-bottom: 2rem;"></div>
+
+                <div class="form-group">
+                    <label>Novo Veto</label>
+                    <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem;">
+                        <select id="vetoType">
+                            <option value="">Selecione o tipo...</option>
+                            <option value="no_ground_floor">Não pode ser térreo</option>
+                            <option value="no_community_view">Não pode ter vista para comunidade</option>
+                            <option value="must_elevator">Deve ter elevador</option>
+                            <option value="min_floor">Andar mínimo específico</option>
+                            <option value="max_price_per_m2">Preço máximo por m²</option>
+                            <option value="min_bedrooms">Mínimo de quartos</option>
+                            <option value="min_bathrooms">Mínimo de banheiros</option>
+                            <option value="min_parking">Mínimo de vagas</option>
+                            <option value="require_standard">Padrão mínimo</option>
+                            <option value="require_concierge">Deve ter Portaria 24h</option>
+                            <option value="require_elevator_building">Edifício sem elevador proibido</option>
+                            <option value="max_liquidity">Liquidez máxima (meses)</option>
+                            <option value="custom">Veto customizado</option>
+                        </select>
+                        <button class="btn btn-primary" style="width: auto;" onclick="addVeto()">Adicionar Veto</button>
+                    </div>
+                </div>
+
+                <div class="form-group" id="vetoParamGroup" style="display: none;">
+                    <label id="vetoParamLabel">Valor:</label>
+                    <input type="text" id="vetoParamValue" placeholder="Digite o valor">
+                </div>
+
+                <script>
+                    document.getElementById('vetoType').addEventListener('change', function() {
+                        const group = document.getElementById('vetoParamGroup');
+                        const label = document.getElementById('vetoParamLabel');
+                        const input = document.getElementById('vetoParamValue');
+                        
+                        const requiresParam = ['min_floor', 'max_price_per_m2', 'min_bedrooms', 'min_bathrooms', 'min_parking', 'require_standard', 'max_liquidity', 'custom'].includes(this.value);
+                        
+                        if (requiresParam) {
+                            group.style.display = 'block';
+                            const labels = {
+                                'min_floor': 'Andar mínimo:',
+                                'max_price_per_m2': 'Preço máximo (R$/m²):',
+                                'min_bedrooms': 'Mínimo de quartos:',
+                                'min_bathrooms': 'Mínimo de banheiros:',
+                                'min_parking': 'Mínimo de vagas:',
+                                'require_standard': 'Padrão mínimo (Básico, Popular, etc):',
+                                'max_liquidity': 'Liquidez máxima (meses):',
+                                'custom': 'Descrição do veto:'
+                            };
+                            label.textContent = labels[this.value] || 'Valor:';
+                        } else {
+                            group.style.display = 'none';
+                            input.value = '';
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+
+        <!-- ABA BUSCAR -->
+        <div id="search" class="tab-content">
+            <div class="filters-container">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Filtros Avançados</h2>
+
+                <div class="filters-section">
+                    <h3>💰 Preço e Rentabilidade</h3>
+                    
+                    <div class="filter-group">
+                        <label>Preço por m² (Faixa)</label>
+                        <div class="range-inputs">
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem;">Mínimo (R$)</label>
+                                <input type="number" id="minPricePerM2" min="0" step="100" value="0" onchange="updateSearch()">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.85rem;">Máximo (R$)</label>
+                                <input type="number" id="maxPricePerM2" min="0" step="100" value="50000" onchange="updateSearch()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <h3>🏢 Características Físicas</h3>
+                    
+                    <div class="form-row">
+                        <div class="filter-group">
+                            <label>Padrão Mínimo</label>
+                            <select id="standardFilter" onchange="updateSearch()">
+                                <option value="">Todos</option>
+                                <option>Básico</option>
+                                <option>Popular</option>
+                                <option>Intermediário</option>
+                                <option>Padrão</option>
+                                <option>Semiluxo</option>
+                                <option>Luxo</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Vista</label>
+                            <select id="viewFilter" onchange="updateSearch()">
+                                <option value="">Todas</option>
+                                <option>Nenhuma</option>
+                                <option>Rua</option>
+                                <option>Praia</option>
+                                <option>Montanha</option>
+                                <option>Parque</option>
+                                <option>Cidade</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="filter-group">
+                            <label>Quartos Mínimos</label>
+                            <input type="number" id="minBedroomsFilter" min="0" value="0" onchange="updateSearch()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Vagas Mínimas</label>
+                            <input type="number" id="minParkingFilter" min="0" value="0" onchange="updateSearch()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Andar Mínimo</label>
+                            <input type="number" id="minFloorFilter" min="0" value="0" onchange="updateSearch()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="filter-group">
+                            <label>Tipo de Condomínio</label>
+                            <select id="condominiumTypeFilter" onchange="updateSearch()">
+                                <option value="">Qualquer tipo</option>
+                                <option>Fechado</option>
+                                <option>Aberto</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <h3>⚡ Liquidez e Investimento</h3>
+                    
+                    <div class="form-row">
+                        <div class="filter-group">
+                            <label>Liquidez Máxima (meses)</label>
+                            <input type="number" id="liquidityFilter" min="0" step="0.5" value="60" onchange="updateSearch()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Potencial de Valorização Mínimo (%)</label>
+                            <input type="number" id="appreciationFilter" min="0" max="100" step="0.5" value="0" onchange="updateSearch()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <h3>🏗️ Infraestrutura</h3>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="poolFilter" onchange="updateSearch()">
+                            <label for="poolFilter">Piscina</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gymFilter" onchange="updateSearch()">
+                            <label for="gymFilter">Academia</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="security24hFilter" onchange="updateSearch()">
+                            <label for="security24hFilter">Segurança 24h</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="concierge24hFilter" onchange="updateSearch()">
+                            <label for="concierge24hFilter">Portaria 24h</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="elevatorFilter" onchange="updateSearch()">
+                            <label for="elevatorFilter">Elevador</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultsContainer"></div>
+        </div>
+
+        <!-- ABA COMPARAR -->
+        <div id="compare" class="tab-content">
+            <div class="form-container">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Comparar Apartamentos</h2>
+                
+                <div id="compareInfo" style="background: var(--neutral-lighter); padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; color: var(--text-secondary);">
+                    <strong>Como usar:</strong> Na aba Buscar, clique em "Comparar" nos apartamentos que deseja comparar. Eles aparecerão aqui lado-a-lado.
+                </div>
+
+                <div id="compareResults"></div>
+            </div>
+        </div>
+
+        <!-- ABA ANÁLISE -->
+        <div id="analysis" class="tab-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Análise de Mercado</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total de Apartamentos</h3>
+                    <div class="stat-card-value" id="totalApts">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Preço Médio</h3>
+                    <div class="stat-card-value" id="avgPrice">R$ 0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Preço Médio por m²</h3>
+                    <div class="stat-card-value" id="avgPricePerM2">R$ 0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Área Média</h3>
+                    <div class="stat-card-value" id="avgArea">0 m²</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Liquidez Média</h3>
+                    <div class="stat-card-value" id="avgLiquidity">0 mês</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Score Médio</h3>
+                    <div class="stat-card-value" id="avgScore">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Potencial de Valorização Médio</h3>
+                    <div class="stat-card-value" id="avgAppreciation">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Custo Médio Mensal</h3>
+                    <div class="stat-card-value" id="avgMonthlyCost">R$ 0</div>
+                </div>
+            </div>
+
+            <div id="analysisDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        const STANDARDS_HIERARCHY = ['Básico', 'Popular', 'Intermediário', 'Padrão', 'Semiluxo', 'Luxo'];
+
+        let apartments = JSON.parse(localStorage.getItem('apartments')) || [];
+        let vetos = JSON.parse(localStorage.getItem('vetos')) || [];
+        let selectedForComparison = new Set();
+
+        // ===== VETOS =====
+        function renderVetos() {
+            const container = document.getElementById('vetosList');
+            if (vetos.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); font-style: italic;">Nenhum veto criado ainda.</p>';
+                return;
+            }
+
+            container.innerHTML = vetos.map((veto, idx) => `
+                <div style="background: var(--neutral-lighter); padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <strong>${getVetoLabel(veto)}</strong>
+                        ${veto.value ? `<div style="font-size: 0.85rem; color: var(--text-secondary);">Valor: ${veto.value}</div>` : ''}
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteVeto(${idx})" style="margin: 0;">Remover</button>
+                </div>
+            `).join('');
+        }
+
+        function getVetoLabel(veto) {
+            const labels = {
+                'no_ground_floor': '🚫 Não pode ser térreo',
+                'no_community_view': '🚫 Não pode ter vista para comunidade',
+                'must_elevator': '✅ Deve ter elevador',
+                'require_elevator_building': '✅ Edifício com elevador',
+                'min_floor': `✅ Andar mínimo: ${veto.value}`,
+                'max_price_per_m2': `💰 Preço máximo: R$ ${veto.value}/m²`,
+                'min_bedrooms': `🛏️ Mínimo ${veto.value} quarto(s)`,
+                'min_bathrooms': `🚿 Mínimo ${veto.value} banheiro(s)`,
+                'min_parking': `🚗 Mínimo ${veto.value} vaga(s)`,
+                'require_standard': `✨ Padrão mínimo: ${veto.value}`,
+                'require_concierge': '📞 Deve ter Portaria 24h',
+                'max_liquidity': `⏱️ Liquidez máxima: ${veto.value} meses`,
+                'custom': `📝 ${veto.value}`
+            };
+            return labels[veto.type] || veto.type;
+        }
+
+        function addVeto() {
+            const type = document.getElementById('vetoType').value;
+            if (!type) {
+                alert('Selecione um tipo de veto');
+                return;
+            }
+
+            const requiresParam = ['min_floor', 'max_price_per_m2', 'min_bedrooms', 'min_bathrooms', 'min_parking', 'require_standard', 'max_liquidity', 'custom'].includes(type);
+            const value = requiresParam ? document.getElementById('vetoParamValue').value : null;
+
+            if (requiresParam && !value) {
+                alert('Preencha o valor do veto');
+                return;
+            }
+
+            vetos.push({ type, value });
+            localStorage.setItem('vetos', JSON.stringify(vetos));
+            renderVetos();
+            document.getElementById('vetoType').value = '';
+            document.getElementById('vetoParamValue').value = '';
+            document.getElementById('vetoParamGroup').style.display = 'none';
+        }
+
+        function deleteVeto(idx) {
+            vetos.splice(idx, 1);
+            localStorage.setItem('vetos', JSON.stringify(vetos));
+            renderVetos();
+        }
+
+        function checkVetos(apt) {
+            for (const veto of vetos) {
+                switch(veto.type) {
+                    case 'no_ground_floor':
+                        if (apt.floor === 0) return false;
+                        break;
+                    case 'no_community_view':
+                        if (apt.view === 'Comunidade') return false;
+                        break;
+                    case 'must_elevator':
+                        if (!apt.elevator) return false;
+                        break;
+                    case 'require_elevator_building':
+                        if (!apt.elevator) return false;
+                        break;
+                    case 'min_floor':
+                        if (apt.floor < parseInt(veto.value)) return false;
+                        break;
+                    case 'max_price_per_m2':
+                        if (apt.pricePerM2 > parseInt(veto.value)) return false;
+                        break;
+                    case 'min_bedrooms':
+                        if (apt.bedrooms < parseInt(veto.value)) return false;
+                        break;
+                    case 'min_bathrooms':
+                        if (apt.bathrooms < parseInt(veto.value)) return false;
+                        break;
+                    case 'min_parking':
+                        if (apt.parking < parseInt(veto.value)) return false;
+                        break;
+                    case 'require_standard':
+                        const minIdx = STANDARDS_HIERARCHY.indexOf(veto.value);
+                        const aptIdx = STANDARDS_HIERARCHY.indexOf(apt.standard);
+                        if (aptIdx < minIdx) return false;
+                        break;
+                    case 'require_concierge':
+                        if (!apt.concierge24h) return false;
+                        break;
+                    case 'max_liquidity':
+                        if (apt.liquidityMonths > parseFloat(veto.value)) return false;
+                        break;
+                }
+            }
+            return true;
+        }
+
+        // ===== SCORE DE INVESTIMENTO =====
+        function calculateInvestmentScore(apt) {
+            let score = 0;
+
+            // 1. LIQUIDEZ (25%)
+            // 0-3 meses = 25 pontos
+            // 3-9 meses = 15 pontos
+            // 9+ meses = 5 pontos
+            let liquidityScore = 0;
+            if (apt.liquidityMonths <= 3) liquidityScore = 25;
+            else if (apt.liquidityMonths <= 9) liquidityScore = 15;
+            else liquidityScore = 5;
+            score += liquidityScore;
+
+            // 2. PREÇO/M² (20%)
+            // Quanto mais barato, melhor (normalizar)
+            // Assumir faixa de 2000-10000
+            const normalizedPrice = Math.max(0, (10000 - apt.pricePerM2) / 8000 * 20);
+            score += Math.min(20, Math.max(0, normalizedPrice));
+
+            // 3. POTENCIAL DE VALORIZAÇÃO (25%)
+            // Multiplicado por 0.25 (5% = 1.25 pontos, 10% = 2.5 pontos, 20% = 5 pontos)
+            score += Math.min(25, (apt.appreciationPotential || 0) * 0.25);
+
+            // 4. CUSTO OPERACIONAL (20%)
+            // Custo mensal = condomínio + utilidades
+            const monthlyCost = (apt.condoFee || 0) + (apt.basicUtilities || 0);
+            // Quanto menor, melhor. Faixa: 0-2000
+            const costScore = Math.max(0, (2000 - monthlyCost) / 2000 * 20);
+            score += Math.min(20, costScore);
+
+            // 5. INFRAESTRUTURA E PADRÃO (10%)
+            let infraScore = 0;
+            const infraItems = ['pool', 'gym', 'security24h', 'concierge24h', 'playground', 'garden', 'elevator', 'bbq'];
+            const infraCount = infraItems.filter(item => apt[item]).length;
+            infraScore = (infraCount / infraItems.length) * 5;
+
+            const standardMultiplier = {
+                'Básico': 0.5,
+                'Popular': 1,
+                'Intermediário': 1.5,
+                'Padrão': 2,
+                'Semiluxo': 2.5,
+                'Luxo': 3
+            };
+            const standardScore = (standardMultiplier[apt.standard] || 0) * 0.5;
+            score += infraScore + standardScore;
+
+            return Math.round(score);
+        }
+
+        function getScoreClass(score) {
+            if (score >= 80) return 'score-excellent';
+            if (score >= 65) return 'score-good';
+            if (score >= 50) return 'score-fair';
+            return 'score-poor';
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 80) return 'EXCELENTE';
+            if (score >= 65) return 'BOM';
+            if (score >= 50) return 'RAZOÁVEL';
+            return 'FRACO';
+        }
+
+        // ===== TABS =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
+            
+            if (tab === 'search') updateSearch();
+            if (tab === 'vetos') renderVetos();
+            if (tab === 'compare') renderComparison();
+            if (tab === 'analysis') updateAnalysis();
+        }
+
+        // ===== ADICIONAR APARTAMENTO =====
+        function addApartment() {
+            const address = document.getElementById('address').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
+            const area = parseFloat(document.getElementById('area').value);
+            const usefulArea = parseFloat(document.getElementById('usefulArea').value) || area;
+            const standard = document.getElementById('standard').value;
+            const floor = parseInt(document.getElementById('floor').value) || 0;
+            const parking = parseInt(document.getElementById('parking').value) || 0;
+            const bedrooms = parseInt(document.getElementById('bedrooms').value) || 0;
+            const bathrooms = parseInt(document.getElementById('bathrooms').value) || 0;
+            const view = document.getElementById('view').value;
+            const liquidityMonths = parseFloat(document.getElementById('liquidityMonths').value) || 6;
+            const appreciationPotential = parseFloat(document.getElementById('appreciationPotential').value) || 0;
+            const condoFee = parseFloat(document.getElementById('condoFee').value) || 0;
+            const basicUtilities = parseFloat(document.getElementById('basicUtilities').value) || 0;
+            const neighborhood = document.getElementById('neighborhood').value.trim();
+            const building = document.getElementById('building').value.trim();
+            const condominiumType = document.getElementById('condominiumType').value;
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!address || !price || !area || !standard) {
+                alert('Preencha os campos obrigatórios: Endereço, Preço, Área e Padrão');
+                return;
+            }
+
+            const apartment = {
+                id: Date.now(),
+                address,
+                price,
+                area,
+                usefulArea,
+                pricePerM2: Math.round(price / area),
+                standard,
+                floor,
+                parking,
+                bedrooms,
+                bathrooms,
+                view,
+                pool: document.getElementById('pool').checked,
+                gym: document.getElementById('gym').checked,
+                security24h: document.getElementById('security24h').checked,
+                concierge24h: document.getElementById('concierge24h').checked,
+                playground: document.getElementById('playground').checked,
+                garden: document.getElementById('garden').checked,
+                elevator: document.getElementById('elevator').checked,
+                bbq: document.getElementById('bbq').checked,
+                notes,
+                liquidityMonths,
+                appreciationPotential,
+                condoFee,
+                basicUtilities,
+                neighborhood,
+                building,
+                condominiumType
+            };
+
+            apartments.push(apartment);
+            localStorage.setItem('apartments', JSON.stringify(apartments));
+            
+            // Limpar formulário
+            document.getElementById('address').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('area').value = '';
+            document.getElementById('usefulArea').value = '';
+            document.getElementById('standard').value = '';
+            document.getElementById('floor').value = '';
+            document.getElementById('parking').value = '';
+            document.getElementById('bedrooms').value = '';
+            document.getElementById('bathrooms').value = '';
+            document.getElementById('view').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('liquidityMonths').value = '';
+            document.getElementById('appreciationPotential').value = '';
+            document.getElementById('condoFee').value = '';
+            document.getElementById('basicUtilities').value = '';
+            document.getElementById('neighborhood').value = '';
+            document.getElementById('building').value = '';
+            document.getElementById('condominiumType').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            alert('Apartamento adicionado com sucesso!');
+        }
+
+        function deleteApartment(id) {
+            if (confirm('Deseja deletar este apartamento?')) {
+                apartments = apartments.filter(apt => apt.id !== id);
+                localStorage.setItem('apartments', JSON.stringify(apartments));
+                updateSearch();
+            }
+        }
+
+        function toggleComparison(id) {
+            if (selectedForComparison.has(id)) {
+                selectedForComparison.delete(id);
+            } else {
+                if (selectedForComparison.size >= 3) {
+                    alert('Você pode comparar até 3 apartamentos');
+                    return;
+                }
+                selectedForComparison.add(id);
+            }
+            updateSearch();
+            renderComparison();
+        }
+
+        function updateSearch() {
+            const minPricePerM2 = parseFloat(document.getElementById('minPricePerM2').value) || 0;
+            const maxPricePerM2 = parseFloat(document.getElementById('maxPricePerM2').value) || 50000;
+            const standardFilter = document.getElementById('standardFilter').value;
+            const viewFilter = document.getElementById('viewFilter').value;
+            const minFloorFilter = parseInt(document.getElementById('minFloorFilter').value) || 0;
+            const minBedroomsFilter = parseInt(document.getElementById('minBedroomsFilter').value) || 0;
+            const minParkingFilter = parseInt(document.getElementById('minParkingFilter').value) || 0;
+            const liquidityFilter = parseFloat(document.getElementById('liquidityFilter').value) || 60;
+            const appreciationFilter = parseFloat(document.getElementById('appreciationFilter').value) || 0;
+            const condominiumTypeFilter = document.getElementById('condominiumTypeFilter').value;
+            const poolFilter = document.getElementById('poolFilter').checked;
+            const gymFilter = document.getElementById('gymFilter').checked;
+            const security24hFilter = document.getElementById('security24hFilter').checked;
+            const concierge24hFilter = document.getElementById('concierge24hFilter').checked;
+            const elevatorFilter = document.getElementById('elevatorFilter').checked;
+
+            const filtered = apartments.filter(apt => {
+                // Vetos
+                if (!checkVetos(apt)) return false;
+
+                // Preço/m²
+                if (apt.pricePerM2 < minPricePerM2 || apt.pricePerM2 > maxPricePerM2) return false;
+
+                // Padrão (mínimo)
+                if (standardFilter) {
+                    const minIdx = STANDARDS_HIERARCHY.indexOf(standardFilter);
+                    const aptIdx = STANDARDS_HIERARCHY.indexOf(apt.standard);
+                    if (aptIdx < minIdx) return false;
+                }
+
+                // Vista
+                if (viewFilter && apt.view !== viewFilter) return false;
+
+                // Andar
+                if (apt.floor < minFloorFilter) return false;
+
+                // Quartos (mínimo)
+                if (apt.bedrooms < minBedroomsFilter) return false;
+
+                // Vagas (mínimo)
+                if (apt.parking < minParkingFilter) return false;
+
+                // Liquidez
+                if (apt.liquidityMonths > liquidityFilter) return false;
+
+                // Potencial de valorização
+                if (apt.appreciationPotential < appreciationFilter) return false;
+
+                // Tipo de condomínio
+                if (condominiumTypeFilter && apt.condominiumType !== condominiumTypeFilter) return false;
+
+                // Infraestrutura
+                if (poolFilter && !apt.pool) return false;
+                if (gymFilter && !apt.gym) return false;
+                if (security24hFilter && !apt.security24h) return false;
+                if (concierge24hFilter && !apt.concierge24h) return false;
+                if (elevatorFilter && !apt.elevator) return false;
+
+                return true;
+            });
+
+            renderResults(filtered);
+        }
+
+        function renderResults(filtered) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Nenhum apartamento encontrado com esses critérios</p></div>';
+                return;
+            }
+
+            const sorted = filtered.sort((a, b) => calculateInvestmentScore(b) - calculateInvestmentScore(a));
+            
+            let html = `<div class="results-info">Encontrados <span>${filtered.length}</span> apartamento(s) - Ordenados por Score de Investimento</div>`;
+
+            html += sorted.map(apt => {
+                const infrastructure = [];
+                if (apt.pool) infrastructure.push('🏊 Piscina');
+                if (apt.gym) infrastructure.push('🏋️ Academia');
+                if (apt.security24h) infrastructure.push('🔒 Segurança 24h');
+                if (apt.concierge24h) infrastructure.push('📞 Portaria 24h');
+                if (apt.playground) infrastructure.push('🛝 Playground');
+                if (apt.garden) infrastructure.push('🌿 Jardim');
+                if (apt.elevator) infrastructure.push('🛗 Elevador');
+                if (apt.bbq) infrastructure.push('🔥 Churrasqueira');
+
+                const score = calculateInvestmentScore(apt);
+                const scoreClass = getScoreClass(score);
+                const scoreLabel = getScoreLabel(score);
+                const monthlyCost = apt.condoFee + apt.basicUtilities;
+                const annualCost = monthlyCost * 12;
+                const costPercentage = ((annualCost / apt.price) * 100).toFixed(1);
+
+                let scoreBreakdown = `
+                    <div class="score-breakdown">
+                        <div class="score-item"><span>Liquidez:</span><span>${apt.liquidityMonths} meses</span></div>
+                        <div class="score-item"><span>Preço/m²:</span><span>R$ ${apt.pricePerM2.toLocaleString('pt-BR')}</span></div>
+                        <div class="score-item"><span>Valorização:</span><span>${apt.appreciationPotential}%</span></div>
+                        <div class="score-item"><span>Custo/mês:</span><span>R$ ${monthlyCost.toLocaleString('pt-BR')}</span></div>
+                    </div>
+                `;
+
+                let liquidityColor = apt.liquidityMonths <= 3 ? 'liquidity-high' : apt.liquidityMonths <= 9 ? 'liquidity-medium' : 'liquidity-low';
+                let liquidityLabel = apt.liquidityMonths <= 3 ? '⚡ Alta Liquidez' : apt.liquidityMonths <= 9 ? '⏱️ Liquidez Média' : '🐢 Baixa Liquidez';
+
+                const isSelected = selectedForComparison.has(apt.id);
+
+                return `
+                    <div class="apartment-card ${isSelected ? 'selected' : ''}">
+                        <div class="score-badge ${scoreClass}">
+                            <div class="score-value">${score}</div>
+                            <div class="score-label">${scoreLabel}</div>
+                        </div>
+
+                        <div class="card-header">
+                            <div style="flex: 1;">
+                                <div class="card-title">${apt.address}</div>
+                                <div class="card-subtitle">${apt.standard}${apt.condominiumType ? ' · ' + apt.condominiumType : ''}</div>
+                            </div>
+                        </div>
+
+                        ${scoreBreakdown}
+
+                        <div class="liquidity-badge ${liquidityColor}">
+                            ${liquidityLabel} - ${apt.liquidityMonths} mês(es)
+                        </div>
+
+                        <div class="card-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">R$ ${apt.pricePerM2.toLocaleString('pt-BR')}</div>
+                                <div class="stat-label">por m²</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${apt.area.toLocaleString('pt-BR')} m²</div>
+                                <div class="stat-label">área</div>
+                            </div>
+                        </div>
+
+                        <div class="cost-estimate">
+                            <div class="cost-row">
+                                <span class="cost-label">Condomínio:</span>
+                                <span class="cost-value">R$ ${apt.condoFee.toLocaleString('pt-BR')}/mês</span>
+                            </div>
+                            <div class="cost-row">
+                                <span class="cost-label">Utilidades:</span>
+                                <span class="cost-value">R$ ${apt.basicUtilities.toLocaleString('pt-BR')}/mês</span>
+                            </div>
+                            <div class="cost-row" style="margin-top: 0.5rem; border-top: 0.5px solid var(--neutral-light); padding-top: 0.4rem;">
+                                <span class="cost-label"><strong>Total anual:</strong></span>
+                                <span class="cost-value"><strong>R$ ${annualCost.toLocaleString('pt-BR')}</strong> (${costPercentage}% do preço)</span>
+                            </div>
+                        </div>
+
+                        <div class="badges">
+                            ${apt.bedrooms > 0 ? `<span class="badge">${apt.bedrooms} ${apt.bedrooms === 1 ? 'quarto' : 'quartos'}</span>` : ''}
+                            ${apt.bathrooms > 0 ? `<span class="badge">${apt.bathrooms} banheiro${apt.bathrooms > 1 ? 's' : ''}</span>` : ''}
+                            ${apt.parking > 0 ? `<span class="badge">${apt.parking} vaga${apt.parking > 1 ? 's' : ''}</span>` : ''}
+                            ${apt.floor > 0 ? `<span class="badge">Andar ${apt.floor}</span>` : ''}
+                            ${apt.view && apt.view !== '' ? `<span class="badge">Vista: ${apt.view}</span>` : ''}
+                            ${apt.appreciationPotential > 0 ? `<span class="badge">+${apt.appreciationPotential}% valorização</span>` : ''}
+                        </div>
+
+                        ${infrastructure.length > 0 ? `<div class="infrastructure-list"><strong>Infraestrutura:</strong><br>${infrastructure.join(' • ')}</div>` : ''}
+                        ${apt.neighborhood ? `<div class="infrastructure-list"><strong>Bairro:</strong> ${apt.neighborhood}</div>` : ''}
+                        ${apt.notes ? `<div class="notes">📝 ${apt.notes}</div>` : ''}
+
+                        <div class="card-actions">
+                            <button class="btn btn-compare" onclick="toggleComparison(${apt.id})" style="flex: 1;">
+                                ${isSelected ? '✓ Selecionado' : '+ Comparar'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteApartment(${apt.id})">Deletar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        function renderComparison() {
+            const container = document.getElementById('compareResults');
+            
+            if (selectedForComparison.size === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Nenhum apartamento selecionado para comparação</p></div>';
+                return;
+            }
+
+            const selected = apartments.filter(apt => selectedForComparison.has(apt.id)).sort((a, b) => calculateInvestmentScore(b) - calculateInvestmentScore(a));
+
+            let html = `<h3 class="section-title">Comparação de Apartamentos</h3>`;
+            html += `<table class="comparison-table"><tr><th>Características</th>`;
+            
+            selected.forEach(apt => {
+                html += `<th>${apt.address}</th>`;
+            });
+            
+            html += `</tr>`;
+
+            const rows = [
+                { label: 'Preço', value: apt => `R$ ${apt.price.toLocaleString('pt-BR')}` },
+                { label: 'Área (m²)', value: apt => apt.area.toLocaleString('pt-BR') },
+                { label: 'Preço/m²', value: apt => `R$ ${apt.pricePerM2.toLocaleString('pt-BR')}` },
+                { label: 'Padrão', value: apt => apt.standard },
+                { label: 'Quartos', value: apt => apt.bedrooms },
+                { label: 'Banheiros', value: apt => apt.bathrooms },
+                { label: 'Vagas', value: apt => apt.parking },
+                { label: 'Andar', value: apt => apt.floor || '-' },
+                { label: 'Liquidez', value: apt => apt.liquidityMonths + ' mês(es)' },
+                { label: 'Potencial de Valorização', value: apt => apt.appreciationPotential + '%' },
+                { label: 'Condomínio/mês', value: apt => `R$ ${apt.condoFee.toLocaleString('pt-BR')}` },
+                { label: 'Utilidades/mês', value: apt => `R$ ${apt.basicUtilities.toLocaleString('pt-BR')}` },
+                { label: 'Custo Total Anual', value: apt => `R$ ${((apt.condoFee + apt.basicUtilities) * 12).toLocaleString('pt-BR')}` },
+                { label: 'Score de Investimento', value: apt => calculateInvestmentScore(apt) },
+                { label: 'Elevador', value: apt => apt.elevator ? '✓' : '-' },
+                { label: 'Piscina', value: apt => apt.pool ? '✓' : '-' },
+                { label: 'Academia', value: apt => apt.gym ? '✓' : '-' },
+                { label: 'Portaria 24h', value: apt => apt.concierge24h ? '✓' : '-' },
+                { label: 'Segurança 24h', value: apt => apt.security24h ? '✓' : '-' }
+            ];
+
+            rows.forEach(row => {
+                html += `<tr><td><strong>${row.label}</strong></td>`;
+                selected.forEach(apt => {
+                    html += `<td>${row.value(apt)}</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `</table>`;
+
+            html += `<button class="btn btn-secondary" onclick="selectedForComparison.clear(); renderComparison();">Limpar Seleção</button>`;
+
+            container.innerHTML = html;
+        }
+
+        function updateAnalysis() {
+            if (apartments.length === 0) {
+                document.getElementById('analysisDetails').innerHTML = '<div class="empty-state"><p>Nenhum apartamento adicionado ainda. Adicione alguns para ver a análise!</p></div>';
+                return;
+            }
+
+            const avgPrice = apartments.reduce((sum, apt) => sum + apt.price, 0) / apartments.length;
+            const avgPricePerM2 = apartments.reduce((sum, apt) => sum + apt.pricePerM2, 0) / apartments.length;
+            const avgArea = apartments.reduce((sum, apt) => sum + apt.area, 0) / apartments.length;
+            const avgLiquidity = apartments.reduce((sum, apt) => sum + apt.liquidityMonths, 0) / apartments.length;
+            const avgScore = apartments.reduce((sum, apt) => sum + calculateInvestmentScore(apt), 0) / apartments.length;
+            const avgAppreciation = apartments.reduce((sum, apt) => sum + apt.appreciationPotential, 0) / apartments.length;
+            const avgMonthlyCost = apartments.reduce((sum, apt) => sum + apt.condoFee + apt.basicUtilities, 0) / apartments.length;
+            
+            const standardCounts = {};
+            apartments.forEach(apt => {
+                standardCounts[apt.standard] = (standardCounts[apt.standard] || 0) + 1;
+            });
+
+            const neighborhoodCounts = {};
+            apartments.forEach(apt => {
+                if (apt.neighborhood) {
+                    neighborhoodCounts[apt.neighborhood] = (neighborhoodCounts[apt.neighborhood] || 0) + 1;
+                }
+            });
+
+            document.getElementById('totalApts').textContent = apartments.length;
+            document.getElementById('avgPrice').textContent = 'R$ ' + Math.round(avgPrice).toLocaleString('pt-BR');
+            document.getElementById('avgPricePerM2').textContent = 'R$ ' + Math.round(avgPricePerM2).toLocaleString('pt-BR');
+            document.getElementById('avgArea').textContent = avgArea.toFixed(1) + ' m²';
+            document.getElementById('avgLiquidity').textContent = avgLiquidity.toFixed(1) + ' mês(es)';
+            document.getElementById('avgScore').textContent = Math.round(avgScore);
+            document.getElementById('avgAppreciation').textContent = avgAppreciation.toFixed(1) + '%';
+            document.getElementById('avgMonthlyCost').textContent = 'R$ ' + Math.round(avgMonthlyCost).toLocaleString('pt-BR');
+
+            let analysisHtml = '';
+
+            analysisHtml += '<div class="analysis-section"><h3>📊 Distribuição por Padrão</h3>';
+            for (const [standard, count] of Object.entries(standardCounts).sort((a, b) => b[1] - a[1])) {
+                const percentage = ((count / apartments.length) * 100).toFixed(0);
+                analysisHtml += `<div class="analysis-row"><span class="analysis-label">${standard}</span><span class="analysis-value">${count} (${percentage}%)</span></div>`;
+            }
+            analysisHtml += '</div>';
+
+            if (Object.keys(neighborhoodCounts).length > 0) {
+                analysisHtml += '<div class="analysis-section"><h3>📍 Análise por Bairro</h3>';
+                for (const [neighborhood, count] of Object.entries(neighborhoodCounts).sort((a, b) => b[1] - a[1])) {
+                    const neighborhoodApts = apartments.filter(apt => apt.neighborhood === neighborhood);
+                    const avgLiquidityNeighborhood = (neighborhoodApts.reduce((sum, apt) => sum + apt.liquidityMonths, 0) / neighborhoodApts.length).toFixed(1);
+                    const avgScoreNeighborhood = Math.round(neighborhoodApts.reduce((sum, apt) => sum + calculateInvestmentScore(apt), 0) / neighborhoodApts.length);
+                    const avgPriceNeighborhood = (neighborhoodApts.reduce((sum, apt) => sum + apt.pricePerM2, 0) / neighborhoodApts.length).toFixed(0);
+                    analysisHtml += `<div class="analysis-row"><span class="analysis-label">${neighborhood}</span><span class="analysis-value">${count} apt. | Score: ${avgScoreNeighborhood} | Liquidez: ${avgLiquidityNeighborhood}m | R$${avgPriceNeighborhood}/m²</span></div>`;
+                }
+                analysisHtml += '</div>';
+            }
+
+            document.getElementById('analysisDetails').innerHTML = analysisHtml;
+        }
+
+        // Inicialização
+        renderVetos();
+    </script>
+</body>
+</html>
