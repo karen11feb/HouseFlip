@@ -969,6 +969,17 @@
                 <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Filtros Avançados</h2>
 
                 <div class="filters-section">
+                    <h3>📍 Região/Bairro</h3>
+                    
+                    <div class="filter-group">
+                        <label>Selecione os bairros/regiões desejadas (deixe em branco para todos)</label>
+                        <div id="neighborhoodCheckboxes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;"></div>
+                        <button class="btn btn-secondary" onclick="selectAllNeighborhoods()" style="margin-right: 0.5rem; width: auto;">Selecionar Todos</button>
+                        <button class="btn btn-secondary" onclick="deselectAllNeighborhoods()" style="width: auto;">Desselecionar Todos</button>
+                    </div>
+                </div>
+
+                <div class="filters-section">
                     <h3>💰 Preço e Rentabilidade</h3>
                     
                     <div class="filter-group">
@@ -976,11 +987,11 @@
                         <div class="range-inputs">
                             <div class="form-group">
                                 <label style="font-size: 0.85rem;">Mínimo (R$)</label>
-                                <input type="number" id="minPricePerM2" min="0" step="100" value="0" onchange="updateSearch()">
+                                <input type="number" id="minPricePerM2" min="0" step="100" value="0">
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 0.85rem;">Máximo (R$)</label>
-                                <input type="number" id="maxPricePerM2" min="0" step="100" value="50000" onchange="updateSearch()">
+                                <input type="number" id="maxPricePerM2" min="0" step="100" value="50000">
                             </div>
                         </div>
                     </div>
@@ -992,7 +1003,7 @@
                     <div class="form-row">
                         <div class="filter-group">
                             <label>Padrão Mínimo</label>
-                            <select id="standardFilter" onchange="updateSearch()">
+                            <select id="standardFilter">
                                 <option value="">Todos</option>
                                 <option>Básico</option>
                                 <option>Popular</option>
@@ -1004,7 +1015,7 @@
                         </div>
                         <div class="filter-group">
                             <label>Vista</label>
-                            <select id="viewFilter" onchange="updateSearch()">
+                            <select id="viewFilter">
                                 <option value="">Todas</option>
                                 <option>Nenhuma</option>
                                 <option>Rua</option>
@@ -1019,22 +1030,22 @@
                     <div class="form-row-3">
                         <div class="filter-group">
                             <label>Quartos Mínimos</label>
-                            <input type="number" id="minBedroomsFilter" min="0" value="0" onchange="updateSearch()">
+                            <input type="number" id="minBedroomsFilter" min="0" value="0">
                         </div>
                         <div class="filter-group">
                             <label>Vagas Mínimas</label>
-                            <input type="number" id="minParkingFilter" min="0" value="0" onchange="updateSearch()">
+                            <input type="number" id="minParkingFilter" min="0" value="0">
                         </div>
                         <div class="filter-group">
                             <label>Andar Mínimo</label>
-                            <input type="number" id="minFloorFilter" min="0" value="0" onchange="updateSearch()">
+                            <input type="number" id="minFloorFilter" min="0" value="0">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="filter-group">
                             <label>Tipo de Condomínio</label>
-                            <select id="condominiumTypeFilter" onchange="updateSearch()">
+                            <select id="condominiumTypeFilter">
                                 <option value="">Qualquer tipo</option>
                                 <option>Fechado</option>
                                 <option>Aberto</option>
@@ -1049,11 +1060,11 @@
                     <div class="form-row">
                         <div class="filter-group">
                             <label>Liquidez Máxima (meses)</label>
-                            <input type="number" id="liquidityFilter" min="0" step="0.5" value="60" onchange="updateSearch()">
+                            <input type="number" id="liquidityFilter" min="0" step="0.5" value="60">
                         </div>
                         <div class="filter-group">
                             <label>Potencial de Valorização Mínimo (%)</label>
-                            <input type="number" id="appreciationFilter" min="0" max="100" step="0.5" value="0" onchange="updateSearch()">
+                            <input type="number" id="appreciationFilter" min="0" max="100" step="0.5" value="0">
                         </div>
                     </div>
                 </div>
@@ -1063,26 +1074,32 @@
                     
                     <div class="checkbox-group">
                         <div class="checkbox-item">
-                            <input type="checkbox" id="poolFilter" onchange="updateSearch()">
+                            <input type="checkbox" id="poolFilter">
                             <label for="poolFilter">Piscina</label>
                         </div>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="gymFilter" onchange="updateSearch()">
+                            <input type="checkbox" id="gymFilter">
                             <label for="gymFilter">Academia</label>
                         </div>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="security24hFilter" onchange="updateSearch()">
+                            <input type="checkbox" id="security24hFilter">
                             <label for="security24hFilter">Segurança 24h</label>
                         </div>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="concierge24hFilter" onchange="updateSearch()">
+                            <input type="checkbox" id="concierge24hFilter">
                             <label for="concierge24hFilter">Portaria 24h</label>
                         </div>
                         <div class="checkbox-item">
-                            <input type="checkbox" id="elevatorFilter" onchange="updateSearch()">
+                            <input type="checkbox" id="elevatorFilter">
                             <label for="elevatorFilter">Elevador</label>
                         </div>
                     </div>
+                </div>
+
+                <div class="filters-section" style="border-bottom: none;">
+                    <button class="btn btn-primary" onclick="updateSearch()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                        🔍 Buscar Apartamentos
+                    </button>
                 </div>
             </div>
 
@@ -1154,6 +1171,46 @@
         let apartments = JSON.parse(localStorage.getItem('apartments')) || [];
         let vetos = JSON.parse(localStorage.getItem('vetos')) || [];
         let selectedForComparison = new Set();
+        let selectedNeighborhoods = new Set();
+
+        // ===== GERENCIAR BAIRROS =====
+        function renderNeighborhoodCheckboxes() {
+            const neighborhoods = [...new Set(apartments.filter(apt => apt.neighborhood).map(apt => apt.neighborhood))].sort();
+            const container = document.getElementById('neighborhoodCheckboxes');
+            
+            if (neighborhoods.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; color: var(--text-secondary); font-style: italic;">Nenhum bairro cadastrado ainda. Adicione apartamentos para filtrar por região.</p>';
+                return;
+            }
+
+            container.innerHTML = neighborhoods.map(neighborhood => `
+                <div class="checkbox-item">
+                    <input type="checkbox" id="neighborhood_${neighborhood}" value="${neighborhood}" 
+                           ${selectedNeighborhoods.has(neighborhood) ? 'checked' : ''}
+                           onchange="toggleNeighborhood('${neighborhood}')">
+                    <label for="neighborhood_${neighborhood}">${neighborhood}</label>
+                </div>
+            `).join('');
+        }
+
+        function toggleNeighborhood(neighborhood) {
+            if (selectedNeighborhoods.has(neighborhood)) {
+                selectedNeighborhoods.delete(neighborhood);
+            } else {
+                selectedNeighborhoods.add(neighborhood);
+            }
+        }
+
+        function selectAllNeighborhoods() {
+            const neighborhoods = [...new Set(apartments.filter(apt => apt.neighborhood).map(apt => apt.neighborhood))];
+            neighborhoods.forEach(n => selectedNeighborhoods.add(n));
+            renderNeighborhoodCheckboxes();
+        }
+
+        function deselectAllNeighborhoods() {
+            selectedNeighborhoods.clear();
+            renderNeighborhoodCheckboxes();
+        }
 
         // ===== VETOS =====
         function renderVetos() {
@@ -1340,7 +1397,10 @@
             document.getElementById(tab).classList.add('active');
             document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
             
-            if (tab === 'search') updateSearch();
+            if (tab === 'search') {
+                renderNeighborhoodCheckboxes();
+                updateSearch();
+            }
             if (tab === 'vetos') renderVetos();
             if (tab === 'compare') renderComparison();
             if (tab === 'analysis') updateAnalysis();
@@ -1470,6 +1530,11 @@
             const elevatorFilter = document.getElementById('elevatorFilter').checked;
 
             const filtered = apartments.filter(apt => {
+                // Filtro de bairro (se nenhum selecionado, mostra todos)
+                if (selectedNeighborhoods.size > 0 && !selectedNeighborhoods.has(apt.neighborhood)) {
+                    return false;
+                }
+
                 // Vetos
                 if (!checkVetos(apt)) return false;
 
